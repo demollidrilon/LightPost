@@ -52,7 +52,7 @@ namespace API.Controllers
                     response.status_code = 400;
                     response.data = registerResponse;
                     response.total = 1;
-                    response.exception_message = null;
+                    response.exception_message = registerResponse;
                 }
 
                 return Ok(new { response });

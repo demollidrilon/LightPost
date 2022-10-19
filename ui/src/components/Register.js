@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
 import { useHistory } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import httpClient from "../utils/AxiosConfig";
 
 const imageStyle = {
   width: 200,
@@ -95,29 +96,71 @@ export default function Register() {
       setIsLoadingForRegister(false);
       return;
     }
+
+    const headers = {
+      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
+      "Content-Type": "application/json",
+    };
+
     const authorization = {
       Username: username,
       Password: password,
       Name: name,
       Surname: surname,
-      PhoneNumber: phoneNumber,
+      TelephoneNumber: phoneNumber,
       Address: address,
       City: city,
     };
 
-    //     await httpClient.post("account/login", authorization).then(
-    //       (res) => {
-    //         auth.saveToken(res.data.token.token);
-    //         history.push("/accounts");
-    //         setIsLoading(true);
-    //       },
-    //       (error) => {
-    //         toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-    //           position: toast.POSITION.BOTTOM_CENTER,
-    //         });
-    //         setIsLoading(false);
-    //       }
-    //     );
+    await httpClient
+      .post("/register", authorization, { headers: headers })
+      .then(
+        (res) => {
+          if (res.data.response.status_code == 200) {
+            toast.success(
+              "Jeni regjistruar me sukses në platformën LightPost",
+              {
+                position: toast.POSITION.BOTTOM_CENTER,
+              }
+            );
+            setTimeout(() => {
+              history.push("/");
+            }, 2000);
+            setIsLoadingForRegister(true);
+          }
+
+          if (
+            res.data.response.status_code == 400 &&
+            res.data.response.exception_message == "Username already exists!"
+          ) {
+            toast.info(
+              "Shfrytëzuesi ekziston! Ju lutem zgjedhni një shfrytëzues tjetër!",
+              {
+                position: toast.POSITION.BOTTOM_CENTER,
+              }
+            );
+            setIsLoadingForRegister(false);
+          } else if (
+            res.data.response.status_code == 400 &&
+            res.data.response.exception_message ==
+              "Telephone number already exists!"
+          ) {
+            toast.info(
+              "Ky numër telefoni ekziston tek një shfrytëzues tjerër! Ju lutem rishikoni numrin tuaj të telefonit",
+              {
+                position: toast.POSITION.BOTTOM_CENTER,
+              }
+            );
+            setIsLoadingForRegister(false);
+          }
+        },
+        (error) => {
+          toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          setIsLoadingForRegister(false);
+        }
+      );
   };
 
   return (

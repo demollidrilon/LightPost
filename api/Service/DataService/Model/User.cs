@@ -20,6 +20,12 @@ namespace Service.DataService.Model
         public bool IsDriver { get; set;}
     }
 
+    public class Roles
+    {
+        public bool IsAdmin { get; set; }
+        public bool IsDriver { get; set; }
+    }
+
     public class RegisterUser
     {
         public int Id { get; set; }

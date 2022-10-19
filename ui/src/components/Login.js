@@ -9,6 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
 import { useHistory } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import * as auth from "../utils/Auth";
+import httpClient from "../utils/AxiosConfig";
 
 const imageStyle = {
   width: 200,
@@ -57,24 +59,40 @@ export default function Login() {
       setIsLoadingForLogin(false);
       return;
     }
+
+    const headers = {
+      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
+      "Content-Type": "application/json",
+    };
+
     const authorization = {
-      UserName: username,
+      Username: username,
       Password: password,
     };
 
-    //     await httpClient.post("account/login", authorization).then(
-    //       (res) => {
-    //         auth.saveToken(res.data.token.token);
-    //         history.push("/accounts");
-    //         setIsLoading(true);
-    //       },
-    //       (error) => {
-    //         toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-    //           position: toast.POSITION.BOTTOM_CENTER,
-    //         });
-    //         setIsLoading(false);
-    //       }
-    //     );
+    await httpClient.post("/login", authorization, { headers: headers }).then(
+      (res) => {
+        console.log(res.data);
+        auth.saveToken(res.data.token);
+        auth.saveId(res.data.response.data.id);
+
+        const isAdmin = res.data.response.data.isAdmin;
+        const isDriver = res.data.response.data.isDriver;
+
+        isAdmin
+          ? history.push("/admin-clients")
+          : isDriver
+          ? history.push("/driver-orders")
+          : history.push("/user-home");
+        setIsLoadingForLogin(true);
+      },
+      (error) => {
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
+        setIsLoadingForLogin(false);
+      }
+    );
   };
 
   const checkPackage = async (event) => {
