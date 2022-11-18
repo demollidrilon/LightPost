@@ -1,5 +1,5 @@
 // eslint-disable
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -42,6 +42,46 @@ export default function Login() {
   const [isLoadingForLogin, setIsLoadingForLogin] = useState(false);
   const [isLoadingForPackage, setIsLoadingForPackage] = useState(false);
 
+  const getRoles = async (event) => {
+    const headers = {
+      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
+      "Content-Type": "application/json",
+    };
+
+    await httpClient
+      .post(`/roles?id=${auth.getId()}`, { headers: headers })
+      .then(
+        (res) => {
+          if (
+            res.data.response.data.isAdmin == true &&
+            res.data.response.data.isDriver == false
+          ) {
+            history.push("/adminClients");
+          } else if (
+            res.data.response.data.isDriver == true &&
+            res.data.response.data.isAdmin == false
+          ) {
+            history.push("/driverOrders");
+          } else {
+            history.push("/userHome");
+          }
+        },
+        (error) => {
+          toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+          history.push("/");
+          auth.clearLocalStorage();
+        }
+      );
+  };
+
+  useEffect(() => {
+    if (auth.isLoggedIn()) {
+      getRoles();
+    }
+  }, []);
+
   const checkLogin = async (event) => {
     setIsLoadingForLogin(true);
     event.preventDefault();
@@ -72,7 +112,6 @@ export default function Login() {
 
     await httpClient.post("/login", authorization, { headers: headers }).then(
       (res) => {
-        console.log(res.data);
         auth.saveToken(res.data.token);
         auth.saveId(res.data.response.data.id);
 
@@ -80,10 +119,10 @@ export default function Login() {
         const isDriver = res.data.response.data.isDriver;
 
         isAdmin
-          ? history.push("/admin-clients")
+          ? history.push("/adminClients")
           : isDriver
-          ? history.push("/driver-orders")
-          : history.push("/user-home");
+          ? history.push("/driverOrders")
+          : history.push("/userHome");
         setIsLoadingForLogin(true);
       },
       (error) => {

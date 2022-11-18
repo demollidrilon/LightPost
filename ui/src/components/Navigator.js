@@ -16,6 +16,7 @@ import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import SettingsIcon from "@mui/icons-material/Settings";
 import * as auth from "../utils/Auth";
 import httpClient from "../utils/AxiosConfig";
 
@@ -43,6 +44,11 @@ const userCategories = [
         id: "Raporte",
         icon: <AssessmentIcon color="primary" />,
       },
+      {
+        key: 6,
+        id: "Konfigurimet",
+        icon: <SettingsIcon color="primary" />,
+      },
     ],
   },
 ];
@@ -51,22 +57,22 @@ const adminCategories = [
   {
     children: [
       {
-        key: 6,
+        key: 7,
         id: "Klientët",
         icon: <PersonSearchIcon color="primary" />,
       },
       {
-        key: 7,
+        key: 8,
         id: "Barazimet e Klientëve",
         icon: <PointOfSaleIcon color="primary" />,
       },
       {
-        key: 8,
+        key: 9,
         id: "Raportet e Klientëve",
         icon: <AssessmentIcon color="primary" />,
       },
       {
-        key: 9,
+        key: 10,
         id: "Porosite e Klientëve",
         icon: <FormatListBulletedIcon color="primary" />,
       },
@@ -78,7 +84,7 @@ const driverCategories = [
   {
     children: [
       {
-        key: 10,
+        key: 11,
         id: "Porositë",
         icon: <FormatListBulletedIcon color="primary" />,
       },
@@ -102,16 +108,17 @@ export default function Navigator(props) {
   let history = useHistory();
 
   const Clicked = (id, key) => {
-    if (key === 1) history.push("/user-home");
-    else if (key === 2) history.push("/user-register-order");
-    else if (key === 3) history.push("/user-order-comments");
-    else if (key === 4) history.push("/user-draws");
-    else if (key === 5) history.push("/user-raports");
-    else if (key === 6) history.push("/admin-clients");
-    else if (key === 7) history.push("/admin-clients-draws");
-    else if (key === 8) history.push("/admin-clients-raports");
-    else if (key === 9) history.push("/admin-clients-orders");
-    else if (key === 10) history.push("/driver-orders");
+    if (key === 1) history.push("/userHome");
+    else if (key === 2) history.push("/userRegisterOrder");
+    else if (key === 3) history.push("/userOrderComments");
+    else if (key === 4) history.push("/userDraws");
+    else if (key === 5) history.push("/UserReports");
+    else if (key === 6) history.push("/UserSettings");
+    else if (key === 7) history.push("/adminClients");
+    else if (key === 8) history.push("/adminClientsDraws");
+    else if (key === 9) history.push("/AdminClientsReports");
+    else if (key === 10) history.push("/adminClientsOrders");
+    else if (key === 11) history.push("/driverOrders");
     else if (key <= 0 && key >= 10) {
       toast.info(
         "Ky shërbim është jashtë funksionit, shërbimi do të jetë i disponueshëm shumë shpejt!",
