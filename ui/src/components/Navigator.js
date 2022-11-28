@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import * as auth from "../utils/Auth";
+import httpClient from "../utils/AxiosConfig";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
@@ -6,9 +10,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useHistory } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import HomeIcon from "@mui/icons-material/Home";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -17,8 +18,7 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import SettingsIcon from "@mui/icons-material/Settings";
-import * as auth from "../utils/Auth";
-import httpClient from "../utils/AxiosConfig";
+import "react-toastify/dist/ReactToastify.css";
 
 const userCategories = [
   {

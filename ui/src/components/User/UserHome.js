@@ -1,5 +1,7 @@
 // eslint-disable
 import React, { useEffect, useState } from "react";
+import httpClient from "../../utils/AxiosConfig";
+import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
@@ -18,16 +20,24 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import TablePagination from "@mui/material/TablePagination";
-import httpClient from "../../utils/AxiosConfig";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import ListIcon from "@mui/icons-material/List";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import MessageIcon from "@mui/icons-material/Message";
+import Divider from "@mui/material/Divider";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserHome = () => {
   const [value, setValue] = useState(0);
@@ -57,6 +67,29 @@ const UserHome = () => {
   const [cancelledOrdersPage, setCancelledOrdersPage] = useState(0);
   const [cancelledOrdersRowsPerPage, setCancelledOrdersRowsPerPage] =
     useState(10);
+  const [openDetails, setOpenDetails] = useState(false);
+  const [openComments, setOpenComments] = useState(false);
+  const [clickedOrderDetails, setClickedOrderDetails] = useState([]);
+  const [clickedOrderComments, setClickedOrderComments] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
+
+  const handleClickOpenDetails = () => {
+    setOpenDetails(true);
+  };
+
+  const handleCloseDetails = () => {
+    setClickedOrderDetails([]);
+    setOpenDetails(false);
+  };
+
+  const handleClickOpenComments = () => {
+    setOpenComments(true);
+  };
+
+  const handleCloseComments = () => {
+    setClickedOrderComments([]);
+    setOpenComments(false);
+  };
 
   const handleAllOrdersChangePage = (event, newPage) => {
     setAllOrdersPage(newPage);
@@ -140,8 +173,8 @@ const UserHome = () => {
         "NUMRI I TELEFONIT",
         "ADRESA",
         "QYTETI",
+        "SHTETI",
         "ÇMIMI",
-        "KOMENTI",
         "POSTIERI",
         "DATA E KRIJIMIT",
         "DATA E MODIFIKIMIT",
@@ -156,6 +189,7 @@ const UserHome = () => {
       elt.telephoneNumber,
       elt.address,
       elt.city,
+      elt.country,
       elt.price,
       elt.comment,
       elt.driver,
@@ -182,8 +216,8 @@ const UserHome = () => {
     { id: "Numri i Telefonit" },
     { id: "Adresa" },
     { id: "Qyteti" },
+    { id: "Shteti" },
     { id: "Çmimi" },
-    { id: "Komenti" },
     { id: "Postieri" },
     { id: "Data e Krijimit" },
     { id: "Data e Modifikimit" },
@@ -215,10 +249,13 @@ const UserHome = () => {
   };
 
   const handleTabChange = (event, newValue) => {
+    if (!newValue == 0) showSearchBar(false);
+    else showSearchBar(true);
     setValue(newValue);
   };
 
   useEffect(() => {
+    showSearchBar(true);
     fetchAll();
   }, []);
 
@@ -276,7 +313,6 @@ const UserHome = () => {
     await httpClient
       .get(`/orders?id=${""}&statusId=${status}&driver=${""}`)
       .then((res) => {
-        console.log(res);
         setSubmittedOrders(res.data.response.data);
       });
   };
@@ -289,14 +325,264 @@ const UserHome = () => {
       });
   };
 
-  const deleteOrder = (e, id) => {
+  const deleteOrder = async (e, code) => {
     e.preventDefault();
-    console.log(id);
-    console.log("delete");
+    await httpClient.post(`/orders/deleteOrder?code=${code}`).then((res) => {
+      fetchAll();
+    });
+  };
+
+  const getOrderDetails = async (e, code) => {
+    e.preventDefault();
+    await httpClient.get(`/orders/orderDetails?code=${code}`).then((res) => {
+      setClickedOrderDetails(res.data.response.data);
+    });
+  };
+
+  const getOrderComents = async (e, code) => {
+    e.preventDefault();
+    await httpClient.get(`/orders/orderComments?code=${code}`).then((res) => {
+      setClickedOrderComments(res.data.response.data);
+    });
+  };
+
+  const orderDetailsDialog = () => {
+    return (
+      <>
+        <Container component="main" maxWidth="xs">
+          <Dialog
+            open={openDetails}
+            onClose={handleCloseDetails}
+            scroll={"paper"}
+          >
+            <AppBar sx={{ position: "relative" }}>
+              <Toolbar>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleCloseDetails}
+                  aria-label="close"
+                >
+                  <CloseIcon />
+                </IconButton>
+                <Typography
+                  sx={{ ml: 2, flex: 1 }}
+                  variant="h6"
+                  component="div"
+                >
+                  Detajet e porosisë
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Grid
+              container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <Card
+                sx={{
+                  width: 600,
+                  height: 350,
+                  mt: 1,
+                }}
+              >
+                <CardContent>
+                  <Grid container spacing={1} columns={30}>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      POROSIA
+                    </Grid>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      {clickedOrderDetails.code != null &&
+                      clickedOrderDetails.code != ""
+                        ? clickedOrderDetails.code
+                        : "/"}
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <Grid container spacing={1} columns={30}>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      PRANUESI
+                    </Grid>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      {clickedOrderDetails.nameSurname != null &&
+                      clickedOrderDetails.nameSurname != ""
+                        ? clickedOrderDetails.nameSurname
+                        : "/"}
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <Grid container spacing={1} columns={30}>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      QYTETI
+                    </Grid>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      {clickedOrderDetails.city != null &&
+                      clickedOrderDetails.city != ""
+                        ? clickedOrderDetails.city
+                        : "/"}
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <Grid container spacing={1} columns={30}>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      ADRESA
+                    </Grid>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      {clickedOrderDetails.address != null &&
+                      clickedOrderDetails.address != ""
+                        ? clickedOrderDetails.address
+                        : "/"}
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <Grid container spacing={1} columns={30}>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      TELEFON
+                    </Grid>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      {clickedOrderDetails.telephoneNumber != null &&
+                      clickedOrderDetails.telephoneNumber != ""
+                        ? clickedOrderDetails.telephoneNumber
+                        : "/"}
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <Grid container spacing={1} columns={30}>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      ÇMIMI
+                    </Grid>
+                    <Grid item xs={15} sx={{ mt: 2 }}>
+                      {clickedOrderDetails.price != null &&
+                      clickedOrderDetails.price != ""
+                        ? "€ " + clickedOrderDetails.price
+                        : "/"}
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Button sx={{ mt: 2 }} type="submit" onClick={handleCloseDetails}>
+              Kthehu prapa
+            </Button>
+          </Dialog>
+        </Container>
+      </>
+    );
+  };
+
+  const orderCommentsDialog = () => {
+    return (
+      <>
+        <Container component="main" maxWidth="xs">
+          <Dialog open={openComments} onClose={handleCloseComments}>
+            <AppBar sx={{ position: "relative" }}>
+              <Toolbar>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleCloseComments}
+                  aria-label="close"
+                >
+                  <CloseIcon />
+                </IconButton>
+                <Typography
+                  sx={{ ml: 2, flex: 1 }}
+                  variant="h6"
+                  component="div"
+                >
+                  Komentet e porosisë
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Grid
+              container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <Card
+                sx={{
+                  width: 600,
+                  height: 600,
+                  mt: 1,
+                }}
+              >
+                <CardContent>
+                  {clickedOrderComments.map((comment) => (
+                    <>
+                      <Grid container spacing={1} sx={{ mt: 1 }} columns={30}>
+                        <Grid item xs={15}>
+                          <Typography
+                            sx={{ fontSize: 14 }}
+                            color="text.secondary"
+                            gutterBottom
+                          >
+                            {comment.personel}
+                          </Typography>
+                          <Typography color="text.secondary">
+                            {comment.telephoneNumber}
+                          </Typography>
+                          <Typography variant="body1">
+                            {comment.comment}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={15}>
+                          <Typography
+                            variant="body1"
+                            sx={{ textAlign: "right", color: "gray" }}
+                          >
+                            <RadioButtonUncheckedIcon fontSize="small" />{" "}
+                            {comment.status}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ textAlign: "right", color: "gray" }}
+                            component="div"
+                          >
+                            {comment.createdDate}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Divider sx={{ mt: 2 }} />
+                    </>
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+            <Button sx={{ mt: 2 }} type="submit" onClick={handleCloseComments}>
+              Kthehu prapa
+            </Button>
+          </Dialog>
+        </Container>
+      </>
+    );
+  };
+
+  const searchInTable = async (e) => {
+    e.preventDefault();
+
+    await httpClient
+      .get(`/orders?manualSearch=${e.target.value}`)
+      .then((res) => {
+        setAllOrders(res.data.response.data);
+      });
+
+    if (e.target.value.length == 0) {
+      fetchAllOrders();
+    }
+  };
+
+  const showSearchBar = (show) => {
+    setShowSearch(show);
   };
 
   return (
     <>
+      {openDetails == true && orderDetailsDialog()}
+      {openComments == true && orderCommentsDialog()}
       <AppBar position="static" color="transparent">
         <Toolbar>
           <Typography component={"span"} variant={"h6"} sx={{ flexGrow: 1 }}>
@@ -356,27 +642,42 @@ const UserHome = () => {
             }}
           />
         </Tabs>
-        <Paper
-          component="form"
-          sx={{
-            p: "2px 4px",
-            m: "0 auto",
-            mt: "1rem",
-            mb: "1rem",
-            display: "flex",
-            alignItems: "center",
-            width: 400,
-          }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Filtro të dhënat"
-            inputProps={{ "aria-label": "Filtro të dhënat" }}
-          />
-          <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-        </Paper>
+        {showSearch ? (
+          <>
+            <Paper
+              component="form"
+              sx={{
+                p: "2px 4px",
+                m: "0 auto",
+                mt: "1rem",
+                mb: "1rem",
+                display: "flex",
+                alignItems: "center",
+                width: 400,
+              }}
+            >
+              <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Filtro të dhënat"
+                inputProps={{ "aria-label": "Filtro të dhënat" }}
+                onChange={(e) => searchInTable(e)}
+              />
+              <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+                <SearchIcon />
+              </IconButton>
+            </Paper>
+            <Typography
+              variant="body2"
+              sx={{ textAlign: "center", color: "gray", mb: "1rem" }}
+              component="div"
+            >
+              Filtro të dhënat me anë të numrit të porosisë, numrit të telefonit
+              [nuk ka nevoj të shënohet '+'] ose emrit dhe mbiemrit të klientit!
+            </Typography>
+          </>
+        ) : (
+          ""
+        )}
         <TabPanel value={value} index={0}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -452,13 +753,13 @@ const UserHome = () => {
                         {row.city != null && row.city != "" ? row.city : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        {row.price != null && row.price != ""
-                          ? row.price + " €"
+                        {row.country != null && row.country != ""
+                          ? row.country
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        {row.comment != null && row.comment != ""
-                          ? row.comment
+                        {row.price != null && row.price != ""
+                          ? row.price + " €"
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
@@ -477,8 +778,23 @@ const UserHome = () => {
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton sx={{ p: "10px", color: "#01579b" }}>
-                          <ListIcon />
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenDetails}
+                        >
+                          <ListIcon
+                            onClick={(e) => getOrderDetails(e, row.code)}
+                          />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenComments}
+                        >
+                          <MessageIcon
+                            onClick={(e) => getOrderComents(e, row.code)}
+                          />
                         </IconButton>
                       </TableCell>
                       {row.status != null &&
@@ -487,7 +803,7 @@ const UserHome = () => {
                           <TableCell align="center">
                             <IconButton
                               sx={{ p: "10px", color: "red " }}
-                              onClick={(e) => deleteOrder(e, row.id)}
+                              onClick={(e) => deleteOrder(e, row.code)}
                             >
                               <HighlightOffIcon />
                             </IconButton>
@@ -513,7 +829,7 @@ const UserHome = () => {
           </TableContainer>
         </TabPanel>
 
-        <TabPanel value={value} index={1}>
+        <TabPanel value={value} index={1} onClick={() => showSearchBar(false)}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -593,15 +909,16 @@ const UserHome = () => {
                         {row.city != null && row.city != "" ? row.city : "/"}
                       </TableCell>
                       <TableCell align="center">
+                        {row.country != null && row.country != ""
+                          ? row.country
+                          : "/"}
+                      </TableCell>
+                      <TableCell align="center">
                         {row.price != null && row.price != ""
                           ? row.price + " €"
                           : "/"}
                       </TableCell>
-                      <TableCell align="center">
-                        {row.comment != null && row.comment != ""
-                          ? row.comment
-                          : "/"}
-                      </TableCell>
+
                       <TableCell align="center">
                         {row.driver != null && row.driver != ""
                           ? row.driver
@@ -618,8 +935,23 @@ const UserHome = () => {
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton sx={{ p: "10px", color: "#01579b" }}>
-                          <ListIcon />
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenDetails}
+                        >
+                          <ListIcon
+                            onClick={(e) => getOrderDetails(e, row.code)}
+                          />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenComments}
+                        >
+                          <MessageIcon
+                            onClick={(e) => getOrderComents(e, row.code)}
+                          />
                         </IconButton>
                       </TableCell>
                       {row.status != null &&
@@ -734,15 +1066,16 @@ const UserHome = () => {
                         {row.city != null && row.city != "" ? row.city : "/"}
                       </TableCell>
                       <TableCell align="center">
+                        {row.country != null && row.country != ""
+                          ? row.country
+                          : "/"}
+                      </TableCell>
+                      <TableCell align="center">
                         {row.price != null && row.price != ""
                           ? row.price + " €"
                           : "/"}
                       </TableCell>
-                      <TableCell align="center">
-                        {row.comment != null && row.comment != ""
-                          ? row.comment
-                          : "/"}
-                      </TableCell>
+
                       <TableCell align="center">
                         {row.driver != null && row.driver != ""
                           ? row.driver
@@ -759,8 +1092,23 @@ const UserHome = () => {
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton sx={{ p: "10px", color: "#01579b" }}>
-                          <ListIcon />
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenDetails}
+                        >
+                          <ListIcon
+                            onClick={(e) => getOrderDetails(e, row.code)}
+                          />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenComments}
+                        >
+                          <MessageIcon
+                            onClick={(e) => getOrderComents(e, row.code)}
+                          />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -866,15 +1214,16 @@ const UserHome = () => {
                         {row.city != null && row.city != "" ? row.city : "/"}
                       </TableCell>
                       <TableCell align="center">
+                        {row.country != null && row.country != ""
+                          ? row.country
+                          : "/"}
+                      </TableCell>
+                      <TableCell align="center">
                         {row.price != null && row.price != ""
                           ? row.price + " €"
                           : "/"}
                       </TableCell>
-                      <TableCell align="center">
-                        {row.comment != null && row.comment != ""
-                          ? row.comment
-                          : "/"}
-                      </TableCell>
+
                       <TableCell align="center">
                         {row.driver != null && row.driver != ""
                           ? row.driver
@@ -891,8 +1240,23 @@ const UserHome = () => {
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton sx={{ p: "10px", color: "#01579b" }}>
-                          <ListIcon />
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenDetails}
+                        >
+                          <ListIcon
+                            onClick={(e) => getOrderDetails(e, row.code)}
+                          />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenComments}
+                        >
+                          <MessageIcon
+                            onClick={(e) => getOrderComents(e, row.code)}
+                          />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -998,13 +1362,14 @@ const UserHome = () => {
                         {row.city != null && row.city != "" ? row.city : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        {row.price != null && row.price != "" ? row.price : "/"}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.comment != null && row.comment != ""
-                          ? row.comment
+                        {row.country != null && row.country != ""
+                          ? row.country
                           : "/"}
                       </TableCell>
+                      <TableCell align="center">
+                        {row.price != null && row.price != "" ? row.price : "/"}
+                      </TableCell>
+
                       <TableCell align="center">
                         {row.driver != null && row.driver != ""
                           ? row.driver
@@ -1021,8 +1386,23 @@ const UserHome = () => {
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton sx={{ p: "10px", color: "#01579b" }}>
-                          <ListIcon />
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenDetails}
+                        >
+                          <ListIcon
+                            onClick={(e) => getOrderDetails(e, row.code)}
+                          />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenComments}
+                        >
+                          <MessageIcon
+                            onClick={(e) => getOrderComents(e, row.code)}
+                          />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -1128,15 +1508,16 @@ const UserHome = () => {
                         {row.city != null && row.city != "" ? row.city : "/"}
                       </TableCell>
                       <TableCell align="center">
+                        {row.country != null && row.country != ""
+                          ? row.country
+                          : "/"}
+                      </TableCell>
+                      <TableCell align="center">
                         {row.price != null && row.price != ""
                           ? row.price + " €"
                           : "/"}
                       </TableCell>
-                      <TableCell align="center">
-                        {row.comment != null && row.comment != ""
-                          ? row.comment
-                          : "/"}
-                      </TableCell>
+
                       <TableCell align="center">
                         {row.driver != null && row.driver != ""
                           ? row.driver
@@ -1153,8 +1534,23 @@ const UserHome = () => {
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton sx={{ p: "10px", color: "#01579b" }}>
-                          <ListIcon />
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenDetails}
+                        >
+                          <ListIcon
+                            onClick={(e) => getOrderDetails(e, row.code)}
+                          />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenComments}
+                        >
+                          <MessageIcon
+                            onClick={(e) => getOrderComents(e, row.code)}
+                          />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -1260,13 +1656,13 @@ const UserHome = () => {
                         {row.city != null && row.city != "" ? row.city : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        {row.price != null && row.price != ""
-                          ? row.price + " €"
+                        {row.country != null && row.country != ""
+                          ? row.country
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        {row.comment != null && row.comment != ""
-                          ? row.comment
+                        {row.price != null && row.price != ""
+                          ? row.price + " €"
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
@@ -1285,8 +1681,23 @@ const UserHome = () => {
                           : "/"}
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton sx={{ p: "10px", color: "#01579b" }}>
-                          <ListIcon />
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenDetails}
+                        >
+                          <ListIcon
+                            onClick={(e) => getOrderDetails(e, row.code)}
+                          />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          sx={{ p: "10px", color: "#01579b" }}
+                          onClick={handleClickOpenComments}
+                        >
+                          <MessageIcon
+                            onClick={(e) => getOrderComents(e, row.code)}
+                          />
                         </IconButton>
                       </TableCell>
                     </TableRow>

@@ -1,5 +1,5 @@
 // eslint-disable
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 import Box from "@mui/material/Box";
@@ -165,7 +165,7 @@ theme = {
 const drawerWidth = 256;
 
 export default function Dashboard({ children }) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
 
   const handleDrawerToggle = () => {

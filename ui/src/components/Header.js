@@ -1,4 +1,6 @@
 import * as React from "react";
+import * as auth from "../utils/Auth";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
@@ -7,10 +9,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import LogoutIcon from "@mui/icons-material/Logout";
-import * as auth from "../utils/Auth";
-import { useHistory } from "react-router-dom";
-
-const lightColor = "rgba(255, 255, 255, 0.7)";
 
 function Header(props) {
   const history = useHistory();
@@ -22,7 +20,7 @@ function Header(props) {
   };
 
   return (
-    <React.Fragment>
+    <>
       <AppBar position="sticky" elevation={0} sx={{ bgcolor: "#101F33" }}>
         <Toolbar>
           <Grid container spacing={1} alignItems="center">
@@ -47,7 +45,7 @@ function Header(props) {
           </Grid>
         </Toolbar>
       </AppBar>
-    </React.Fragment>
+    </>
   );
 }
 

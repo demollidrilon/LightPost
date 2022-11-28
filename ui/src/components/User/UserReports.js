@@ -1,7 +1,7 @@
 // eslint-disable
 import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import httpClient from "../../utils/AxiosConfig";
+import { ToastContainer } from "react-toastify";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
@@ -27,13 +27,13 @@ import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import httpClient from "../../utils/AxiosConfig";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import IconButton from "@mui/material/IconButton";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import "react-toastify/dist/ReactToastify.css";
 
 const boxStyle = {
   marginTop: 6,

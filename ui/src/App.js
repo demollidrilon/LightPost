@@ -15,6 +15,7 @@ import UserOrderComments from "./components/User/UserOrderComments";
 import UserReports from "./components/User/UserReports";
 import UserRegisterOrder from "./components/User/UserRegisterOrder";
 import UserSettings from "./components/User/UserSettings";
+import TrackOrder from "./components/TrackOrder";
 import requireAuth from "./utils/ProtectedRoute";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Switch>
               <Route exact path="/" component={Login} />
               <Route path="/register" component={Register} />
+              <Route path="/trackOrder/:code" component={TrackOrder} />
               <Dashboard>
                 <Route
                   path="/adminClients"

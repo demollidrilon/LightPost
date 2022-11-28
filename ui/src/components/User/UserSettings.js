@@ -1,20 +1,18 @@
 // eslint-disable
 import React, { useState, useEffect } from "react";
+import * as auth from "../../utils/Auth";
+import httpClient from "../../utils/AxiosConfig";
+import { ToastContainer, toast } from "react-toastify";
 import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import * as auth from "../../utils/Auth";
-import httpClient from "../../utils/AxiosConfig";
-import { ToastContainer, toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const boxStyle = {
@@ -107,7 +105,6 @@ const UserSettings = () => {
 
   useEffect(() => {
     getData();
-    console.log(userData);
   }, []);
 
   return (
