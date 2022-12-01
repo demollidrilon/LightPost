@@ -12,11 +12,12 @@ namespace Service.DataService
            : base(sqlConnection)
         { }
 
-        public List<Orders> GetOrders(int? id, int? statusId, string? driver, string? fromDate, string? untilDate, string? manualSearch)
+        public List<Orders> GetOrders(int? id, int? statusId, string? driverId, string? fromDate, string? untilDate, string? manualSearch)
         {
             List<Orders> orders;
             DynamicParameters param = new DynamicParameters();
             param.Add("@Id", id);
+            param.Add("@DriverId", driverId);
             param.Add("@StatusId", statusId == 1 ? null : statusId);
             param.Add("@FromDate", fromDate);
             param.Add("@UntilDate", untilDate);
@@ -81,6 +82,19 @@ namespace Service.DataService
             DynamicParameters param = new DynamicParameters();
             param.Add("@Code", code);
             string procedure = "OrdersDelete_sp";
+            string response = ExecuteProcedure(procedure, param);
+
+            return response;
+        }
+
+        public string AddCommentToOrder(int? code, int? statusId, string? comment, int? personelId)
+        {
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@Code", code);
+            param.Add("@StatusId", statusId);
+            param.Add("@Comment", comment);
+            param.Add("@PersonelId", personelId);
+            string procedure = "AddComments_sp";
             string response = ExecuteProcedure(procedure, param);
 
             return response;

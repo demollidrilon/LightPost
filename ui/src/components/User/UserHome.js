@@ -355,7 +355,7 @@ const UserHome = () => {
             onClose={handleCloseDetails}
             scroll={"paper"}
           >
-            <AppBar sx={{ position: "relative" }}>
+            <AppBar sx={{ position: "relative", backgroundColor: "#101F33" }}>
               <Toolbar>
                 <IconButton
                   edge="start"
@@ -390,10 +390,10 @@ const UserHome = () => {
               >
                 <CardContent>
                   <Grid container spacing={1} columns={30}>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       POROSIA
                     </Grid>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       {clickedOrderDetails.code != null &&
                       clickedOrderDetails.code != ""
                         ? clickedOrderDetails.code
@@ -402,10 +402,10 @@ const UserHome = () => {
                   </Grid>
                   <Divider />
                   <Grid container spacing={1} columns={30}>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       PRANUESI
                     </Grid>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       {clickedOrderDetails.nameSurname != null &&
                       clickedOrderDetails.nameSurname != ""
                         ? clickedOrderDetails.nameSurname
@@ -414,10 +414,10 @@ const UserHome = () => {
                   </Grid>
                   <Divider />
                   <Grid container spacing={1} columns={30}>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       QYTETI
                     </Grid>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       {clickedOrderDetails.city != null &&
                       clickedOrderDetails.city != ""
                         ? clickedOrderDetails.city
@@ -426,10 +426,10 @@ const UserHome = () => {
                   </Grid>
                   <Divider />
                   <Grid container spacing={1} columns={30}>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       ADRESA
                     </Grid>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       {clickedOrderDetails.address != null &&
                       clickedOrderDetails.address != ""
                         ? clickedOrderDetails.address
@@ -438,10 +438,10 @@ const UserHome = () => {
                   </Grid>
                   <Divider />
                   <Grid container spacing={1} columns={30}>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       TELEFON
                     </Grid>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       {clickedOrderDetails.telephoneNumber != null &&
                       clickedOrderDetails.telephoneNumber != ""
                         ? clickedOrderDetails.telephoneNumber
@@ -450,10 +450,10 @@ const UserHome = () => {
                   </Grid>
                   <Divider />
                   <Grid container spacing={1} columns={30}>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       ÇMIMI
                     </Grid>
-                    <Grid item xs={15} sx={{ mt: 2 }}>
+                    <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       {clickedOrderDetails.price != null &&
                       clickedOrderDetails.price != ""
                         ? "€ " + clickedOrderDetails.price
@@ -477,7 +477,7 @@ const UserHome = () => {
       <>
         <Container component="main" maxWidth="xs">
           <Dialog open={openComments} onClose={handleCloseComments}>
-            <AppBar sx={{ position: "relative" }}>
+            <AppBar sx={{ position: "relative", backgroundColor: "#101F33" }}>
               <Toolbar>
                 <IconButton
                   edge="start"
@@ -960,7 +960,7 @@ const UserHome = () => {
                           <TableCell align="center">
                             <IconButton
                               sx={{ p: "10px", color: "red " }}
-                              onClick={(e) => deleteOrder(e, row.id)}
+                              onClick={(e) => deleteOrder(e, row.code)}
                             >
                               <HighlightOffIcon />
                             </IconButton>

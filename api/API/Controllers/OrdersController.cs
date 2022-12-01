@@ -52,7 +52,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrders(int? id, int? statusId, string? driver, string? fromDate, string? untilDate, string? manualSearch)
+        public IActionResult GetOrders(int? id, int? statusId, string? driverId, string? fromDate, string? untilDate, string? manualSearch)
         {
 
             if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ namespace API.Controllers
 
             try
             {
-                var data = ordersService.GetOrders(id, statusId, driver, fromDate, untilDate, manualSearch);
+                var data = ordersService.GetOrders(id, statusId, driverId, fromDate, untilDate, manualSearch);
 
                 if (null == data)
                     return StatusCode(404);
@@ -144,6 +144,36 @@ namespace API.Controllers
             try
             {
                 var data = ordersService.DeleteOrder(code);
+
+                if (null == data)
+                    return StatusCode(404);
+
+                response.status_code = 200;
+                response.data = data;
+                response.total = 1;
+
+                return Ok(new { response });
+            }
+            catch (Exception ex)
+            {
+                response.exception_message = ex.Message;
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpPost("addComment")]
+        public IActionResult AddCommentToOrder(int? code, int? statusId, string? comment, int? personelId)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (statusId == 100)
+                statusId = null;
+
+            try
+            {
+                var data = ordersService.AddCommentToOrder(code, statusId, comment, personelId);
 
                 if (null == data)
                     return StatusCode(404);
