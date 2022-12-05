@@ -82,6 +82,10 @@ export default function Login() {
     }
   }, []);
 
+  const logOut = () => {
+    auth.clearLocalStorage();
+  };
+
   const checkLogin = async (event) => {
     setIsLoadingForLogin(true);
     event.preventDefault();
@@ -112,12 +116,26 @@ export default function Login() {
 
     await httpClient.post("/login", authorization, { headers: headers }).then(
       (res) => {
+        console.log(res);
         auth.saveToken(res.data.token);
         auth.saveId(res.data.response.data.id);
 
         const isAdmin = res.data.response.data.isAdmin;
         const isDriver = res.data.response.data.isDriver;
+        const enabled = res.data.response.data.enable;
 
+        if (!enabled) {
+          toast.error(
+            "Ju nuk keni çasje në aplikacion! Ju lutem kontaktoni me administraten e LightPost!",
+            {
+              position: toast.POSITION.BOTTOM_CENTER,
+            }
+          );
+          setIsLoadingForLogin(false);
+          logOut();
+          history.push("/");
+          return;
+        }
         isAdmin
           ? history.push("/adminClients")
           : isDriver
