@@ -43,37 +43,34 @@ export default function Login() {
   const [isLoadingForPackage, setIsLoadingForPackage] = useState(false);
 
   const getRoles = async (event) => {
-    const headers = {
-      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-      "Content-Type": "application/json",
+    const body = {
+      Id: JSON.parse(auth.getId()),
     };
 
-    await httpClient
-      .post(`/roles?id=${auth.getId()}`, { headers: headers })
-      .then(
-        (res) => {
-          if (
-            res.data.response.data.isAdmin == true &&
-            res.data.response.data.isDriver == false
-          ) {
-            history.push("/adminClients");
-          } else if (
-            res.data.response.data.isDriver == true &&
-            res.data.response.data.isAdmin == false
-          ) {
-            history.push("/driverOrders");
-          } else {
-            history.push("/userHome");
-          }
-        },
-        (error) => {
-          toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-            position: toast.POSITION.BOTTOM_CENTER,
-          });
-          history.push("/");
-          auth.clearLocalStorage();
+    await httpClient.post("/roles", body).then(
+      (res) => {
+        if (
+          res.data.response.data.isAdmin == true &&
+          res.data.response.data.isDriver == false
+        ) {
+          history.push("/adminClients");
+        } else if (
+          res.data.response.data.isDriver == true &&
+          res.data.response.data.isAdmin == false
+        ) {
+          history.push("/driverOrders");
+        } else {
+          history.push("/userHome");
         }
-      );
+      },
+      (error) => {
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
+        history.push("/");
+        auth.clearLocalStorage();
+      }
+    );
   };
 
   useEffect(() => {
@@ -103,20 +100,13 @@ export default function Login() {
       setIsLoadingForLogin(false);
       return;
     }
-
-    const headers = {
-      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-      "Content-Type": "application/json",
-    };
-
     const authorization = {
       Username: username,
       Password: password,
     };
 
-    await httpClient.post("/login", authorization, { headers: headers }).then(
+    await httpClient.post("/login", authorization).then(
       (res) => {
-        console.log(res);
         auth.saveToken(res.data.token);
         auth.saveId(res.data.response.data.id);
 

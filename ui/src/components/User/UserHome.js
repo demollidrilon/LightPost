@@ -38,6 +38,7 @@ import MessageIcon from "@mui/icons-material/Message";
 import Divider from "@mui/material/Divider";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import "react-toastify/dist/ReactToastify.css";
+import * as auth from "../../utils/Auth";
 
 const UserHome = () => {
   const [value, setValue] = useState(0);
@@ -72,6 +73,7 @@ const UserHome = () => {
   const [clickedOrderDetails, setClickedOrderDetails] = useState([]);
   const [clickedOrderComments, setClickedOrderComments] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
+  const [clientId, setClientId] = useState(null);
 
   const handleClickOpenDetails = () => {
     setOpenDetails(true);
@@ -255,6 +257,7 @@ const UserHome = () => {
   };
 
   useEffect(() => {
+    setClientId(auth.getId());
     showSearchBar(true);
     fetchAll();
   }, []);
@@ -271,7 +274,9 @@ const UserHome = () => {
 
   const fetchAllOrders = async (id, status, driver) => {
     await httpClient
-      .get(`/orders?id=${""}&statusId=${""}&driver=${""}`)
+      .get(
+        `/orders/allOrders?id=${""}&statusId=${""}&driver=${""}&clientId=${auth.getId()}`
+      )
       .then((res) => {
         setAllOrders(res.data.response.data);
       });
@@ -279,7 +284,9 @@ const UserHome = () => {
 
   const fetchCreatedOrders = async (id, status, driver) => {
     await httpClient
-      .get(`/orders?id=${""}&statusId=${status}&driver=${""}`)
+      .get(
+        `/orders/allOrders?id=${""}&statusId=${status}&driver=${""}&clientId=${auth.getId()}`
+      )
       .then((res) => {
         setCreatedOrders(res.data.response.data);
       });
@@ -287,7 +294,9 @@ const UserHome = () => {
 
   const fetchAcceptedOrders = async (id, status, driver) => {
     await httpClient
-      .get(`/orders?id=${""}&statusId=${status}&driver=${""}`)
+      .get(
+        `/orders/allOrders?id=${""}&statusId=${status}&driver=${""}&clientId=${auth.getId()}`
+      )
       .then((res) => {
         setAcceptedOrders(res.data.response.data);
       });
@@ -295,7 +304,9 @@ const UserHome = () => {
 
   const fetchUnacceptedOrders = async (id, status, driver) => {
     await httpClient
-      .get(`/orders?id=${""}&statusId=${status}&driver=${""}`)
+      .get(
+        `/orders/allOrders?id=${""}&statusId=${status}&driver=${""}&clientId=${auth.getId()}`
+      )
       .then((res) => {
         setUnacceptedOrders(res.data.response.data);
       });
@@ -303,7 +314,9 @@ const UserHome = () => {
 
   const fetchToDeliverOrders = async (id, status, driver) => {
     await httpClient
-      .get(`/orders?id=${""}&statusId=${status}&driver=${""}`)
+      .get(
+        `/orders/allOrders?id=${""}&statusId=${status}&driver=${""}&clientId=${auth.getId()}`
+      )
       .then((res) => {
         setToDeliverOrders(res.data.response.data);
       });
@@ -311,7 +324,9 @@ const UserHome = () => {
 
   const fetchSubmittedOrders = async (id, status, driver) => {
     await httpClient
-      .get(`/orders?id=${""}&statusId=${status}&driver=${""}`)
+      .get(
+        `/orders/allOrders?id=${""}&statusId=${status}&driver=${""}&clientId=${auth.getId()}`
+      )
       .then((res) => {
         setSubmittedOrders(res.data.response.data);
       });
@@ -319,15 +334,20 @@ const UserHome = () => {
 
   const fetchCancelledOrders = async (id, status, driver) => {
     await httpClient
-      .get(`/orders?id=${""}&statusId=${status}&driver=${""}`)
+      .get(
+        `/orders/allOrders?id=${""}&statusId=${status}&driver=${""}&clientId=${auth.getId()}`
+      )
       .then((res) => {
         setCancelledOrders(res.data.response.data);
       });
   };
 
   const deleteOrder = async (e, code) => {
+    const body = {
+      code: code,
+    };
     e.preventDefault();
-    await httpClient.post(`/orders/deleteOrder?code=${code}`).then((res) => {
+    await httpClient.post("/orders/deleteOrder", body).then((res) => {
       fetchAll();
     });
   };
@@ -505,9 +525,13 @@ const UserHome = () => {
             >
               <Card
                 sx={{
-                  width: 600,
+                  width: 500,
                   height: 600,
                   mt: 1,
+                }}
+                style={{
+                  overflow: "hidden",
+                  overflowY: "scroll", // added scroll
                 }}
               >
                 <CardContent>
@@ -565,7 +589,9 @@ const UserHome = () => {
     e.preventDefault();
 
     await httpClient
-      .get(`/orders?manualSearch=${e.target.value}`)
+      .get(
+        `/orders/allOrders?manualSearch=${e.target.value}&clientId=${clientId}`
+      )
       .then((res) => {
         setAllOrders(res.data.response.data);
       });

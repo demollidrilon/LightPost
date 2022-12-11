@@ -12,11 +12,11 @@ namespace Service.DataService
            : base(sqlConnection)
         { }
 
-        public Roles GetRoles(int id)
+        public Roles GetRoles(Roles role)
         {
             Roles roles;
             DynamicParameters param = new DynamicParameters();
-            param.Add("@Id", id);
+            param.Add("@Id", role.Id);
             string procedure = "RolesSelect_sp";
             roles = GetObjectSp<Roles>(procedure, param);
 

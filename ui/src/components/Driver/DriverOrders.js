@@ -34,7 +34,6 @@ const DriverOrders = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orders, setOrders] = useState([]);
-  const [id, setId] = useState(auth.getId());
   const [openDetails, setOpenDetails] = useState(false);
   const [clickedOrderDetails, setClickedOrderDetails] = useState([]);
   const [comment, setComment] = useState(null);
@@ -63,9 +62,11 @@ const DriverOrders = () => {
   }, []);
 
   const getOrders = async () => {
-    await httpClient.get(`/orders/?driverId=${id}`).then((res) => {
-      setOrders(res.data.response.data);
-    });
+    await httpClient
+      .get(`/orders/allOrders?driverId=${auth.getId()}`)
+      .then((res) => {
+        setOrders(res.data.response.data);
+      });
   };
 
   const getOrderDetails = async (e, code) => {
@@ -80,19 +81,26 @@ const DriverOrders = () => {
   };
 
   const changeOrderStatus = async () => {
-    await httpClient.post(
-      `/orders/addComment?code=${
-        clickedOrderDetails.code
-      }&statusId=${orderStatus}&personelId=${auth.getId()}`
-    );
+    const body = {
+      code: JSON.parse(clickedOrderDetails.code),
+      statusId: JSON.parse(orderStatus),
+      personelId: JSON.parse(auth.getId()),
+    };
+    await httpClient.post("/orders/addComment", body).then((res) => {
+      getOrders();
+    });
   };
 
   const addCommentToOrder = async () => {
-    await httpClient.post(
-      `/orders/addComment?code=${clickedOrderDetails.code}&statusId=${
-        orderStatus == undefined ? 100 : orderStatus
-      }&comment=${comment}&personelId=${auth.getId()}`
-    );
+    const body = {
+      code: JSON.parse(clickedOrderDetails.code),
+      statusId: JSON.parse(orderStatus),
+      comment: comment,
+      personelId: JSON.parse(auth.getId()),
+    };
+    await httpClient.post("/orders/addComment", body).then((res) => {
+      getOrders();
+    });
   };
 
   const updateOrder = async () => {
@@ -374,7 +382,9 @@ const DriverOrders = () => {
                         : "/"}
                     </TableCell>
                     <TableCell align="center">
-                      {row.price != null && row.price != "" ? row.price : "/"}
+                      {row.price != null && row.price != ""
+                        ? row.price + "€"
+                        : "/"}
                     </TableCell>
                     <TableCell align="center">
                       {row.createdDate != null && row.createdDate != ""

@@ -12,16 +12,16 @@ namespace Service.DataService
           : base(sqlConnection)
         { }
 
-        public string Register(RegisterUser model)
+        public string RegisterUser(RegisterUser registerUser)
         {
             DynamicParameters param = new DynamicParameters();
-            param.Add("@Username", model.Username);
-            param.Add("@Password", model.Password);
-            param.Add("@Name", model.Password);
-            param.Add("@Surname", model.Password);
-            param.Add("@TelephoneNumber", model.TelephoneNumber);
-            param.Add("@Address", model.Password);
-            param.Add("@City", model.Password);
+            param.Add("@Username", registerUser.Username);
+            param.Add("@Password", registerUser.Password);
+            param.Add("@Name", registerUser.Password);
+            param.Add("@Surname", registerUser.Password);
+            param.Add("@TelephoneNumber", registerUser.TelephoneNumber);
+            param.Add("@Address", registerUser.Password);
+            param.Add("@City", registerUser.Password);
             string procedure = "UsersInsert_sp";
             var response = ExecuteProcedure(procedure, param);
 

@@ -11,7 +11,6 @@ using System.Security.Claims;
 
 namespace API.Controllers
 {
-    [ApiKeyAuth]
     [Route("api/[controller]")]
     [ApiController]
     public class RegisterController : ControllerBase
@@ -28,14 +27,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register([FromBody] RegisterUser model)
+        public IActionResult RegisterUser([FromBody] RegisterUser registerUser)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var registerResponse = registerService.Register(model);
+                var registerResponse = registerService.RegisterUser(registerUser);
 
                 if (null == registerResponse)
                     return StatusCode(404);

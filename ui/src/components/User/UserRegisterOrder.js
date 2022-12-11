@@ -27,6 +27,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import CircularProgress from "@mui/material/CircularProgress";
+import * as auth from "../../utils/Auth";
 
 const UserRegisterOrder = (props) => {
   const history = useHistory();
@@ -95,11 +96,6 @@ const UserRegisterOrder = (props) => {
       }
     }
 
-    const headers = {
-      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-      "Content-Type": "application/json",
-    };
-
     const orderBody = {
       NameSurname: reciever,
       CountryId: parseInt(country),
@@ -108,6 +104,7 @@ const UserRegisterOrder = (props) => {
       TelephoneNumber: phoneNumber,
       Price: parseFloat(price),
       Comment: comment,
+      ClientId: JSON.parse(auth.getId()),
       StatusId: 1,
     };
 

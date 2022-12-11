@@ -1,4 +1,5 @@
-﻿using API.Model;
+﻿using API.Filters;
+using API.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -25,14 +26,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOrder([FromBody] Orders model)
+        public IActionResult CreateOrder([FromBody] Orders order)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var data = ordersService.CreateOrder(model);
+                var data = ordersService.CreateOrder(order);
                 var insertComments = ordersService.InsertOrderComments();
 
                 if (null == data)
@@ -51,8 +52,38 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult GetOrders(int? id, int? statusId, string? driverId, string? fromDate, string? untilDate, string? manualSearch)
+        [HttpPost("addComment")]
+        public IActionResult AddCommentToOrder([FromBody] OrderDetails addCommentToOrder)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (addCommentToOrder.StatusId == 100)
+                addCommentToOrder.StatusId = null;
+
+            try
+            {
+                var data = ordersService.AddCommentToOrder(addCommentToOrder);
+
+                if (null == data)
+                    return StatusCode(404);
+
+                response.status_code = 200;
+                response.data = data;
+                response.total = 1;
+
+                return Ok(new { response });
+            }
+            catch (Exception ex)
+            {
+                response.exception_message = ex.Message;
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpPost("deleteOrder")]
+        public IActionResult DeleteOrders([FromBody] OrderDetails deleteOrder)
         {
 
             if (!ModelState.IsValid)
@@ -60,7 +91,59 @@ namespace API.Controllers
 
             try
             {
-                var data = ordersService.GetOrders(id, statusId, driverId, fromDate, untilDate, manualSearch);
+                var data = ordersService.DeleteOrder(deleteOrder);
+
+                if (null == data)
+                    return StatusCode(404);
+
+                response.status_code = 200;
+                response.data = data;
+                response.total = 1;
+
+                return Ok(new { response });
+            }
+            catch (Exception ex)
+            {
+                response.exception_message = ex.Message;
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetOrders([FromForm] OrderDetails getOrders)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var data = ordersService.GetOrders(getOrders);
+
+                if (null == data)
+                    return StatusCode(404);
+
+                response.status_code = 200;
+                response.data = data;
+                response.total = 1;
+
+                return Ok(new { response });
+            }
+            catch (Exception ex)
+            {
+                response.exception_message = ex.Message;
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpGet("allOrders")]
+        public IActionResult GetAllOrders(int? id, int? statusId, string? driverId, string? fromDate, string? untilDate, string? manualSearch, int? clientId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var data = ordersService.GetAllOrders(id, statusId, driverId, fromDate, untilDate, manualSearch, clientId);
 
                 if (null == data)
                     return StatusCode(404);
@@ -134,53 +217,33 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost("deleteOrder")]
-        public IActionResult DeleteOrders(int? code)
+        [HttpPost("setDriverForOrder")]
+        public IActionResult SetDriverForOrder(int? code, int? driverId)
         {
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var data = ordersService.DeleteOrder(code);
+                var data = ordersService.SetDriverForOrder(code, driverId);
 
                 if (null == data)
                     return StatusCode(404);
 
-                response.status_code = 200;
-                response.data = data;
-                response.total = 1;
-
-                return Ok(new { response });
-            }
-            catch (Exception ex)
-            {
-                response.exception_message = ex.Message;
-                return StatusCode(500, response);
-            }
-        }
-
-        [HttpPost("addComment")]
-        public IActionResult AddCommentToOrder(int? code, int? statusId, string? comment, int? personelId)
-        {
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (statusId == 100)
-                statusId = null;
-
-            try
-            {
-                var data = ordersService.AddCommentToOrder(code, statusId, comment, personelId);
-
-                if (null == data)
-                    return StatusCode(404);
-
-                response.status_code = 200;
-                response.data = data;
-                response.total = 1;
+                if (data == "OK")
+                {
+                    response.status_code = 200;
+                    response.data = "The driver has been set successfully for selected order!";
+                    response.total = 1;
+                    response.exception_message = null;
+                }
+                else
+                {
+                    response.status_code = 400;
+                    response.data = data;
+                    response.total = 1;
+                    response.exception_message = data;
+                }
 
                 return Ok(new { response });
             }

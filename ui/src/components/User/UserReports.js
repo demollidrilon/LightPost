@@ -34,6 +34,7 @@ import AnalyticsIcon from "@mui/icons-material/Analytics";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import "react-toastify/dist/ReactToastify.css";
+import * as auth from "../../utils/Auth";
 
 const boxStyle = {
   marginTop: 6,
@@ -131,7 +132,7 @@ const UserReports = () => {
   const getData = async (orderStatus, fromDate, untilDate) => {
     await httpClient
       .get(
-        `/orders?statusId=${orderStatus}&fromDate=${fromDate}&untilDate=${untilDate}`
+        `/orders/allOrders?statusId=${orderStatus}&fromDate=${fromDate}&untilDate=${untilDate}&clientId=${auth.getId()}`
       )
       .then((res) => {
         setReports(res.data.response.data);
@@ -149,11 +150,6 @@ const UserReports = () => {
 
   const search = async (event) => {
     event.preventDefault();
-    const headers = {
-      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-      "Content-Type": "application/json",
-    };
-
     const data = {
       FromDate: fromDateValue.format("MM/DD/YYYY"),
       UntilDate: untilDateValue.format("MM/DD/YYYY"),
@@ -308,7 +304,10 @@ const UserReports = () => {
                         : "/"}
                     </TableCell>
                     <TableCell align="center">
-                      {2 != null && 2 != "" ? 2 : "/"}
+                      {row.transportationPrice != null &&
+                      row.transportationPrice != ""
+                        ? row.transportationPrice + "€"
+                        : "/"}
                     </TableCell>
                   </TableRow>
                 ))}

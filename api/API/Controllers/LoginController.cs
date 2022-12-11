@@ -11,7 +11,6 @@ using System.Security.Claims;
 
 namespace API.Controllers
 {
-    [ApiKeyAuth]
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
@@ -28,14 +27,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody] LoginUser model)
+        public IActionResult LoginUser([FromBody] LoginUser loginUser)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var data = loginService.Login(model);
+                var data = loginService.LoginUser(loginUser);
 
                 if (null == data)
                     return StatusCode(404);

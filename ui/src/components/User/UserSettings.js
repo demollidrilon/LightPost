@@ -36,11 +36,6 @@ const UserSettings = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [id, setId] = useState(auth.getId());
 
-  const headers = {
-    ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-    "Content-Type": "application/json",
-  };
-
   const updatePassword = async (event) => {
     setIsLoading(true);
     event.preventDefault();
@@ -66,41 +61,32 @@ const UserSettings = () => {
       return;
     }
 
-    const headers = {
-      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-      "Content-Type": "application/json",
-    };
-
     const body = {
       Password: password,
       SetPassword: confirmPassword,
-      Id: userData.id,
+      Id: JSON.parse(id),
     };
 
-    await httpClient
-      .post("/UserDetails/changePassword", body, { headers: headers })
-      .then(
-        (res) => {
-          toast.info("Fjalëkalimi u përditësua me sukses!", {
-            position: toast.POSITION.BOTTOM_CENTER,
-          });
-          setIsLoading(false);
-        },
-        (error) => {
-          toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-            position: toast.POSITION.BOTTOM_CENTER,
-          });
-          setIsLoading(false);
-        }
-      );
+    await httpClient.post("/UserDetails/changeUserPassword", body).then(
+      (res) => {
+        toast.info("Fjalëkalimi u përditësua me sukses!", {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
+        setIsLoading(false);
+      },
+      (error) => {
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
+        setIsLoading(false);
+      }
+    );
   };
 
   const getData = async () => {
-    await httpClient
-      .get(`/UserDetails?id=${id}`, { headers: headers })
-      .then((res) => {
-        setUserData(res.data.response.data[0]);
-      });
+    await httpClient.get(`/UserDetails?id=${id}`).then((res) => {
+      setUserData(res.data.response.data[0]);
+    });
   };
 
   useEffect(() => {

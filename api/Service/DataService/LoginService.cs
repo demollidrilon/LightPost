@@ -12,12 +12,12 @@ namespace Service.DataService
            : base(sqlConnection)
         { }
 
-        public LoginUser Login(LoginUser model)
+        public LoginUser LoginUser(LoginUser loginUser)
         {
             LoginUser user;
             DynamicParameters param = new DynamicParameters();
-            param.Add("@Username", model.Username);
-            param.Add("@Password", model.Password);
+            param.Add("@Username", loginUser.Username);
+            param.Add("@Password", loginUser.Password);
             string procedure = "UsersSelect_sp";
             user = GetObjectSp<LoginUser>(procedure, param);
 

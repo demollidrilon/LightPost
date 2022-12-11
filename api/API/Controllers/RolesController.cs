@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Service.DataService;
+using Service.DataService.Model;
 using System;
 
 namespace API.Controllers
@@ -25,7 +26,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetRoles(int id)
+        public IActionResult GetRoles([FromBody]Roles role)
         {
 
             if (!ModelState.IsValid)
@@ -33,7 +34,7 @@ namespace API.Controllers
 
             try
             {
-                var data = rolesService.GetRoles(id);
+                var data = rolesService.GetRoles(role);
 
                 if (null == data)
                     return StatusCode(404);

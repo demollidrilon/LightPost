@@ -23,6 +23,7 @@ namespace Service.DataService.Model
         public int CountryId { get; set; }
         public long EquationId { get; set; }
         public int StatusId { get; set; }
+        public int ClientId { get; set; }
     }
 
     public class OrderComments

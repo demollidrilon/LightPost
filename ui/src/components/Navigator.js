@@ -130,26 +130,23 @@ export default function Navigator(props) {
   };
 
   const getRoles = async (event) => {
-    const headers = {
-      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-      "Content-Type": "application/json",
+    const body = {
+      Id: JSON.parse(auth.getId()),
     };
 
-    await httpClient
-      .post(`/roles?id=${auth.getId()}`, { headers: headers })
-      .then(
-        (res) => {
-          setAdmin(res.data.response.data.isAdmin);
-          setDriver(res.data.response.data.isDriver);
-        },
-        (error) => {
-          toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-            position: toast.POSITION.BOTTOM_CENTER,
-          });
-          history.push("/");
-          auth.clearLocalStorage();
-        }
-      );
+    await httpClient.post("/roles", body).then(
+      (res) => {
+        setAdmin(res.data.response.data.isAdmin);
+        setDriver(res.data.response.data.isDriver);
+      },
+      (error) => {
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
+        history.push("/");
+        auth.clearLocalStorage();
+      }
+    );
   };
 
   useEffect(() => {

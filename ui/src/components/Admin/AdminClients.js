@@ -75,11 +75,12 @@ const AdminClients = () => {
 
   const handleCloseDetails = () => {
     setSelectedUser(null);
+    setRole(null);
+    setStatus(null);
     setOpenDetails(false);
   };
 
   const openSelectedUser = async (e, id) => {
-    console.log(id);
     e.preventDefault();
     setSelectedUser(id);
   };
@@ -138,17 +139,10 @@ const AdminClients = () => {
     doc.save(note + ".pdf");
   };
 
-  const headers = {
-    ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-    "Content-Type": "application/json",
-  };
-
   const getUsers = async () => {
-    await httpClient
-      .get("/UserDetails/users", { headers: headers })
-      .then((res) => {
-        setUsers(res.data.response.data);
-      });
+    await httpClient.get("/UserDetails/users").then((res) => {
+      setUsers(res.data.response.data);
+    });
   };
 
   const changeUserRoleBody = {
@@ -158,9 +152,7 @@ const AdminClients = () => {
 
   const changeUserRole = async () => {
     await httpClient
-      .post("/UserDetails/changeRole", changeUserRoleBody, {
-        headers: headers,
-      })
+      .post("/UserDetails/changeUserRole", changeUserRoleBody)
       .then((res) => {
         getUsers();
       });
@@ -173,16 +165,13 @@ const AdminClients = () => {
 
   const changeUserStatus = async () => {
     await httpClient
-      .post("/UserDetails/changeStatus", changeUserStatusBody, {
-        headers: headers,
-      })
+      .post("/UserDetails/changeUserStatus", changeUserStatusBody)
       .then((res) => {
         getUsers();
       });
   };
 
   const updateUserDetails = async () => {
-    console.log(selectedUser, role, status);
     if (role != null) changeUserRole();
 
     if (status != null) changeUserStatus();
@@ -192,7 +181,6 @@ const AdminClients = () => {
 
   useEffect(() => {
     getUsers();
-    console.log(users);
   }, []);
 
   const userDetailsDialog = () => {
@@ -291,6 +279,7 @@ const AdminClients = () => {
                     onClick={() => {
                       updateUserDetails();
                     }}
+                    disabled={role == null && status == null}
                   >
                     Ndrysho
                   </Button>

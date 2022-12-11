@@ -97,11 +97,6 @@ export default function Register() {
       return;
     }
 
-    const headers = {
-      ApiKey: "a9dfaq8d0cf3-4r53-42c3-9fq0-1ee7e3rd",
-      "Content-Type": "application/json",
-    };
-
     const authorization = {
       Username: username,
       Password: password,
@@ -112,55 +107,50 @@ export default function Register() {
       City: city,
     };
 
-    await httpClient
-      .post("/register", authorization, { headers: headers })
-      .then(
-        (res) => {
-          if (res.data.response.status_code == 200) {
-            toast.success(
-              "Jeni regjistruar me sukses në platformën LightPost",
-              {
-                position: toast.POSITION.BOTTOM_CENTER,
-              }
-            );
-            setTimeout(() => {
-              history.push("/");
-            }, 2000);
-            setIsLoadingForRegister(true);
-          }
-
-          if (
-            res.data.response.status_code == 400 &&
-            res.data.response.exception_message == "Username already exists!"
-          ) {
-            toast.info(
-              "Shfrytëzuesi ekziston! Ju lutem zgjedhni një shfrytëzues tjetër!",
-              {
-                position: toast.POSITION.BOTTOM_CENTER,
-              }
-            );
-            setIsLoadingForRegister(false);
-          } else if (
-            res.data.response.status_code == 400 &&
-            res.data.response.exception_message ==
-              "Telephone number already exists!"
-          ) {
-            toast.info(
-              "Ky numër telefoni ekziston tek një shfrytëzues tjerër! Ju lutem rishikoni numrin tuaj të telefonit",
-              {
-                position: toast.POSITION.BOTTOM_CENTER,
-              }
-            );
-            setIsLoadingForRegister(false);
-          }
-        },
-        (error) => {
-          toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
+    await httpClient.post("/register", authorization).then(
+      (res) => {
+        if (res.data.response.status_code == 200) {
+          toast.success("Jeni regjistruar me sukses në platformën LightPost", {
             position: toast.POSITION.BOTTOM_CENTER,
           });
+          setTimeout(() => {
+            history.push("/");
+          }, 2000);
+          setIsLoadingForRegister(true);
+        }
+
+        if (
+          res.data.response.status_code == 400 &&
+          res.data.response.exception_message == "Username already exists!"
+        ) {
+          toast.info(
+            "Shfrytëzuesi ekziston! Ju lutem zgjedhni një shfrytëzues tjetër!",
+            {
+              position: toast.POSITION.BOTTOM_CENTER,
+            }
+          );
+          setIsLoadingForRegister(false);
+        } else if (
+          res.data.response.status_code == 400 &&
+          res.data.response.exception_message ==
+            "Telephone number already exists!"
+        ) {
+          toast.info(
+            "Ky numër telefoni ekziston tek një shfrytëzues tjerër! Ju lutem rishikoni numrin tuaj të telefonit",
+            {
+              position: toast.POSITION.BOTTOM_CENTER,
+            }
+          );
           setIsLoadingForRegister(false);
         }
-      );
+      },
+      (error) => {
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
+          position: toast.POSITION.BOTTOM_CENTER,
+        });
+        setIsLoadingForRegister(false);
+      }
+    );
   };
 
   return (
