@@ -42,6 +42,7 @@ import Divider from "@mui/material/Divider";
 import CloseIcon from "@mui/icons-material/Close";
 import ListIcon from "@mui/icons-material/List";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import PaidIcon from "@mui/icons-material/Paid";
 
 const boxStyle = {
   marginTop: 6,
@@ -372,6 +373,11 @@ const AdminClientsOrders = () => {
                       </TableCell>
                       <TableCell align="center">
                         <IconButton
+                          disabled={
+                            row.equationId != null &&
+                            row.equationId != "" &&
+                            row.equationId > 0
+                          }
                           sx={{ p: "10px", color: "#01579b" }}
                           onClick={handleClickOpenDetails}
                         >
@@ -389,6 +395,15 @@ const AdminClientsOrders = () => {
                               onClick={(e) => deleteOrder(e, row.code)}
                             >
                               <HighlightOffIcon />
+                            </IconButton>
+                          </TableCell>
+                        )}
+                      {row.equationId != null &&
+                        row.equationId != "" &&
+                        row.equationId > 0 && (
+                          <TableCell align="center">
+                            <IconButton sx={{ p: "10px", color: "green " }}>
+                              <PaidIcon />
                             </IconButton>
                           </TableCell>
                         )}

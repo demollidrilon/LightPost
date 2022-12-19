@@ -39,6 +39,7 @@ import Divider from "@mui/material/Divider";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import "react-toastify/dist/ReactToastify.css";
 import * as auth from "../../utils/Auth";
+import PaidIcon from "@mui/icons-material/Paid";
 
 const UserHome = () => {
   const [value, setValue] = useState(0);
@@ -835,6 +836,15 @@ const UserHome = () => {
                             </IconButton>
                           </TableCell>
                         )}
+                      {row.equationId != null &&
+                        row.equationId != "" &&
+                        row.equationId > 0 && (
+                          <TableCell align="center">
+                            <IconButton sx={{ p: "10px", color: "green " }}>
+                              <PaidIcon />
+                            </IconButton>
+                          </TableCell>
+                        )}
                     </TableRow>
                   ))}
               </TableBody>
@@ -992,6 +1002,15 @@ const UserHome = () => {
                             </IconButton>
                           </TableCell>
                         )}
+                      {row.equationId != null &&
+                        row.equationId != "" &&
+                        row.equationId > 0 && (
+                          <TableCell align="center">
+                            <IconButton sx={{ p: "10px", color: "green " }}>
+                              <PaidIcon />
+                            </IconButton>
+                          </TableCell>
+                        )}
                     </TableRow>
                   ))}
               </TableBody>
@@ -1137,6 +1156,15 @@ const UserHome = () => {
                           />
                         </IconButton>
                       </TableCell>
+                      {row.equationId != null &&
+                        row.equationId != "" &&
+                        row.equationId > 0 && (
+                          <TableCell align="center">
+                            <IconButton sx={{ p: "10px", color: "green " }}>
+                              <PaidIcon />
+                            </IconButton>
+                          </TableCell>
+                        )}
                     </TableRow>
                   ))}
               </TableBody>
@@ -1285,6 +1313,15 @@ const UserHome = () => {
                           />
                         </IconButton>
                       </TableCell>
+                      {row.equationId != null &&
+                        row.equationId != "" &&
+                        row.equationId > 0 && (
+                          <TableCell align="center">
+                            <IconButton sx={{ p: "10px", color: "green " }}>
+                              <PaidIcon />
+                            </IconButton>
+                          </TableCell>
+                        )}
                     </TableRow>
                   ))}
               </TableBody>
@@ -1431,6 +1468,15 @@ const UserHome = () => {
                           />
                         </IconButton>
                       </TableCell>
+                      {row.equationId != null &&
+                        row.equationId != "" &&
+                        row.equationId > 0 && (
+                          <TableCell align="center">
+                            <IconButton sx={{ p: "10px", color: "green " }}>
+                              <PaidIcon />
+                            </IconButton>
+                          </TableCell>
+                        )}
                     </TableRow>
                   ))}
               </TableBody>
@@ -1579,6 +1625,15 @@ const UserHome = () => {
                           />
                         </IconButton>
                       </TableCell>
+                      {row.equationId != null &&
+                        row.equationId != "" &&
+                        row.equationId > 0 && (
+                          <TableCell align="center">
+                            <IconButton sx={{ p: "10px", color: "green " }}>
+                              <PaidIcon />
+                            </IconButton>
+                          </TableCell>
+                        )}
                     </TableRow>
                   ))}
               </TableBody>
@@ -1726,6 +1781,15 @@ const UserHome = () => {
                           />
                         </IconButton>
                       </TableCell>
+                      {row.equationId != null &&
+                        row.equationId != "" &&
+                        row.equationId > 0 && (
+                          <TableCell align="center">
+                            <IconButton sx={{ p: "10px", color: "green " }}>
+                              <PaidIcon />
+                            </IconButton>
+                          </TableCell>
+                        )}
                     </TableRow>
                   ))}
               </TableBody>

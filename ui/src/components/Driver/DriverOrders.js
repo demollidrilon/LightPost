@@ -120,7 +120,6 @@ const DriverOrders = () => {
     return (
       <>
         <Container component="main" maxWidth="xs">
-          n
           <Dialog
             open={openDetails}
             onClose={handleCloseDetails}
@@ -251,6 +250,11 @@ const DriverOrders = () => {
                     </Grid>
                     <Grid item xs={15} sx={{ mt: 2, fontSize: 14 }}>
                       <TextField
+                        disabled={
+                          clickedOrderDetails.equationId != null &&
+                          clickedOrderDetails.equationId != "" &&
+                          clickedOrderDetails.equationId > 0
+                        }
                         id="outlined-multiline-static"
                         label="Komenti "
                         multiline
@@ -271,6 +275,11 @@ const DriverOrders = () => {
                           Statusi
                         </InputLabel>
                         <Select
+                          disabled={
+                            clickedOrderDetails.equationId != null &&
+                            clickedOrderDetails.equationId != "" &&
+                            clickedOrderDetails.equationId > 0
+                          }
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
                           label="Statusi"
@@ -286,7 +295,13 @@ const DriverOrders = () => {
                       </FormControl>
                     </Grid>
                   </Grid>
+
                   <Button
+                    disabled={
+                      clickedOrderDetails.equationId != null &&
+                      clickedOrderDetails.equationId != "" &&
+                      clickedOrderDetails.equationId > 0
+                    }
                     sx={{ float: "right", mt: 2 }}
                     type="submit"
                     variant="contained"
@@ -298,6 +313,18 @@ const DriverOrders = () => {
                   </Button>
                 </CardContent>
               </Card>
+              {clickedOrderDetails.equationId != null &&
+                clickedOrderDetails.equationId != "" &&
+                clickedOrderDetails.equationId > 0 && (
+                  <Typography
+                    component={"span"}
+                    variant={"h7"}
+                    sx={{ flexGrow: 1, color: "green" }}
+                  >
+                    Kjo porosi është barazuar! Id e barazimit të porosisë është:
+                    {clickedOrderDetails.equationId}
+                  </Typography>
+                )}
             </Grid>
             <Button sx={{ mt: 2 }} type="submit" onClick={handleCloseDetails}>
               Kthehu prapa

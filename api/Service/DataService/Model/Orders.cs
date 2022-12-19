@@ -24,6 +24,7 @@ namespace Service.DataService.Model
         public long EquationId { get; set; }
         public int StatusId { get; set; }
         public int ClientId { get; set; }
+        public string Method { get; set; }
     }
 
     public class OrderComments

@@ -1,0 +1,36 @@
+﻿using Dapper;
+using Service.DataService.Model;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Service.DataService
+{
+    public class EquationsService : DataAccess
+    {
+        public EquationsService(string sqlConnection)
+           : base(sqlConnection)
+        { }
+
+        public List<Equations> GetEquations()
+        {
+            List<Equations> equations;
+            DynamicParameters param = new DynamicParameters();
+            string procedure = "EquationsSelect_sp";
+            equations = (List<Equations>)GetListSp<Equations>(procedure, param);
+
+            return equations;
+        }
+
+        public List<Orders> GetEquationOrders(int equationId)
+        {
+            List<Orders> orders;
+            DynamicParameters param = new DynamicParameters();
+            string procedure = "EquationOrdersSelect_sp";
+            param.Add("@EquationId", equationId);
+            orders = (List<Orders>)GetListSp<Orders>(procedure, param);
+
+            return orders;
+        }
+    }
+}
