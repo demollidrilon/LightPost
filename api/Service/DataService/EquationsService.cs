@@ -12,11 +12,12 @@ namespace Service.DataService
            : base(sqlConnection)
         { }
 
-        public List<Equations> GetEquations()
+        public List<Equations> GetEquations(int? clientId)
         {
             List<Equations> equations;
             DynamicParameters param = new DynamicParameters();
             string procedure = "EquationsSelect_sp";
+            param.Add("@ClientId", clientId);
             equations = (List<Equations>)GetListSp<Equations>(procedure, param);
 
             return equations;

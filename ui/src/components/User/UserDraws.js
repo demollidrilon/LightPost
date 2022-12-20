@@ -25,6 +25,7 @@ import ListIcon from "@mui/icons-material/List";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
+import * as auth from "../../utils/Auth";
 
 const boxStyle = {
   marginTop: 6,
@@ -118,7 +119,7 @@ const UserDraws = () => {
   }, []);
 
   const getEquations = async () => {
-    await httpClient.get(`/equations/`).then((res) => {
+    await httpClient.get(`/equations?clientId=${auth.getId()}`).then((res) => {
       setEquations(res.data.response.data);
     });
   };
@@ -297,7 +298,10 @@ const UserDraws = () => {
                               align="center"
                               sx={{
                                 fontWeight: "bold",
-                                color: "#4caf50",
+                                color:
+                                  row.status === "DOREZUAR"
+                                    ? "#4caf50"
+                                    : "#f44336",
                               }}
                             >
                               {row.status != null && row.status != ""

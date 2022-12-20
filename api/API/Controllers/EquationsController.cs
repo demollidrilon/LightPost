@@ -24,14 +24,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEquations()
+        public IActionResult GetEquations(int? clientId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var data = equationsService.GetEquations();
+                var data = equationsService.GetEquations(clientId);
 
                 if (null == data)
                     return StatusCode(404);
