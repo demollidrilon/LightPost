@@ -12,10 +12,24 @@ namespace Service.DataService
           : base(sqlConnection)
         { }
 
+        
         public List<LoginUser> GetUsers()
         {
             List<LoginUser> users;
             DynamicParameters param = new DynamicParameters();
+            string procedure = "UsersSelect_sp";
+            users = (List<LoginUser>)GetListSp<LoginUser>(procedure, param);
+
+            return users;
+        }
+
+        public List<LoginUser> GetUsersForEquation()
+        {
+            List<LoginUser> users;
+            DynamicParameters param = new DynamicParameters();
+            param.Add("@IsDriver", 0);
+            param.Add("@IsAdmin", 0);
+            param.Add("@Enabled", 1);
             string procedure = "UsersSelect_sp";
             users = (List<LoginUser>)GetListSp<LoginUser>(procedure, param);
 

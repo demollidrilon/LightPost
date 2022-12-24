@@ -40,23 +40,17 @@ const UserSettings = () => {
     setIsLoading(true);
     event.preventDefault();
     if (password == null || password == "") {
-      toast.warn("Ju lutem shënoni fjalëkalimin e ri!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni fjalëkalimin e ri!");
       setIsLoading(false);
       return;
     }
     if (confirmPassword == null || confirmPassword == "") {
-      toast.warn("Ju lutem shënoni konfirmimin e fjalëkalimit!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni konfirmimin e fjalëkalimit!");
       setIsLoading(false);
       return;
     }
     if (password != confirmPassword) {
-      toast.warn("Fjalëkalimet duhet të përputhen!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Fjalëkalimet duhet të përputhen!");
       setIsLoading(false);
       return;
     }
@@ -69,15 +63,11 @@ const UserSettings = () => {
 
     await httpClient.post("/UserDetails/changeUserPassword", body).then(
       (res) => {
-        toast.info("Fjalëkalimi u përditësua me sukses!", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.info("Fjalëkalimi u përditësua me sukses!");
         setIsLoading(false);
       },
       (error) => {
-        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.");
         setIsLoading(false);
       }
     );

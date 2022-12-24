@@ -58,9 +58,7 @@ const UserDraws = () => {
     await httpClient
       .get(`/equations/orders?equationId=${equationId}`)
       .then((res) => {
-        console.log("orders", res.data.response.data);
         setClickedEquationOrders(res.data.response.data);
-        console.log("clickedEquationOrders", clickedEquationOrders);
       });
   };
 

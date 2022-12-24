@@ -121,10 +121,7 @@ export default function Navigator(props) {
     else if (key === 11) history.push("/driverOrders");
     else if (key <= 0 && key >= 10) {
       toast.info(
-        "Ky shërbim është jashtë funksionit, shërbimi do të jetë i disponueshëm shumë shpejt!",
-        {
-          position: toast.POSITION.BOTTOM_CENTER,
-        }
+        "Ky shërbim është jashtë funksionit, shërbimi do të jetë i disponueshëm shumë shpejt!"
       );
     }
   };
@@ -140,9 +137,7 @@ export default function Navigator(props) {
         setDriver(res.data.response.data.isDriver);
       },
       (error) => {
-        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.");
         history.push("/");
         auth.clearLocalStorage();
       }

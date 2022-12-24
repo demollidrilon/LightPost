@@ -23,6 +23,32 @@ namespace API.Controllers
             response = new Response();
         }
 
+        [HttpPost]
+        public IActionResult CreateEquation(int clientId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var data = equationsService.CreateEquation(clientId);
+
+                if (null == data)
+                    return StatusCode(404);
+
+                response.status_code = 200;
+                response.data = data;
+                response.total = 1;
+
+                return Ok(new { response });
+            }
+            catch (Exception ex)
+            {
+                response.exception_message = ex.Message;
+                return StatusCode(500, response);
+            }
+        }
+
         [HttpGet]
         public IActionResult GetEquations(int? clientId)
         {

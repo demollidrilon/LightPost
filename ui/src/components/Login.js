@@ -64,9 +64,7 @@ export default function Login() {
         }
       },
       (error) => {
-        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.");
         history.push("/");
         auth.clearLocalStorage();
       }
@@ -87,16 +85,12 @@ export default function Login() {
     setIsLoadingForLogin(true);
     event.preventDefault();
     if (username == null || username == "") {
-      toast.warn("Ju lutem shënoni shfrytëzuesin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni shfrytëzuesin!");
       setIsLoadingForLogin(false);
       return;
     }
     if (password == null || password == "") {
-      toast.warn("Ju lutem shënoni fjalëkalimin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni fjalëkalimin!");
       setIsLoadingForLogin(false);
       return;
     }
@@ -116,10 +110,7 @@ export default function Login() {
 
         if (!enabled) {
           toast.error(
-            "Ju nuk keni çasje në aplikacion! Ju lutem kontaktoni me administraten e LightPost!",
-            {
-              position: toast.POSITION.BOTTOM_CENTER,
-            }
+            "Ju nuk keni çasje në aplikacion! Ju lutem kontaktoni me administraten e LightPost!"
           );
           setIsLoadingForLogin(false);
           logOut();
@@ -134,9 +125,7 @@ export default function Login() {
         setIsLoadingForLogin(true);
       },
       (error) => {
-        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.");
         setIsLoadingForLogin(false);
       }
     );
@@ -146,9 +135,7 @@ export default function Login() {
     setIsLoadingForPackage(true);
     event.preventDefault();
     if (packageCode == null || packageCode == "") {
-      toast.warn("Ju lutem shënoni kodin e paketës për gjurmim!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni kodin e paketës për gjurmim!", );
       setIsLoadingForPackage(false);
       return;
     }

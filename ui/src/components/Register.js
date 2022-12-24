@@ -48,51 +48,37 @@ export default function Register() {
     setIsLoadingForRegister(true);
     event.preventDefault();
     if (username == null || username == "") {
-      toast.warn("Ju lutem shënoni shfrytëzuesin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni shfrytëzuesin!");
       setIsLoadingForRegister(false);
       return;
     }
     if (password == null || password == "") {
-      toast.warn("Ju lutem shënoni fjalëkalimin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni fjalëkalimin!");
       setIsLoadingForRegister(false);
       return;
     }
     if (name == null || name == "") {
-      toast.warn("Ju lutem shënoni emrin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni emrin!");
       setIsLoadingForRegister(false);
       return;
     }
     if (surname == null || surname == "") {
-      toast.warn("Ju lutem shënoni mbiemrin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni mbiemrin!");
       setIsLoadingForRegister(false);
       return;
     }
     if (phoneNumber == null || phoneNumber == "") {
-      toast.warn("Ju lutem shënoni numrin e telefonit!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni numrin e telefonit!");
       setIsLoadingForRegister(false);
       return;
     }
     if (address == null || address == "") {
-      toast.warn("Ju lutem shënoni adresën!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni adresën!");
       setIsLoadingForRegister(false);
       return;
     }
     if (city == null || city == "") {
-      toast.warn("Ju lutem shënoni qytetin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni qytetin!");
       setIsLoadingForRegister(false);
       return;
     }
@@ -110,9 +96,7 @@ export default function Register() {
     await httpClient.post("/register", authorization).then(
       (res) => {
         if (res.data.response.status_code == 200) {
-          toast.success("Jeni regjistruar me sukses në platformën LightPost", {
-            position: toast.POSITION.BOTTOM_CENTER,
-          });
+          toast.success("Jeni regjistruar me sukses në platformën LightPost");
           setTimeout(() => {
             history.push("/");
           }, 2000);
@@ -124,10 +108,7 @@ export default function Register() {
           res.data.response.exception_message == "Username already exists!"
         ) {
           toast.info(
-            "Shfrytëzuesi ekziston! Ju lutem zgjedhni një shfrytëzues tjetër!",
-            {
-              position: toast.POSITION.BOTTOM_CENTER,
-            }
+            "Shfrytëzuesi ekziston! Ju lutem zgjedhni një shfrytëzues tjetër!"
           );
           setIsLoadingForRegister(false);
         } else if (
@@ -136,18 +117,13 @@ export default function Register() {
             "Telephone number already exists!"
         ) {
           toast.info(
-            "Ky numër telefoni ekziston tek një shfrytëzues tjerër! Ju lutem rishikoni numrin tuaj të telefonit",
-            {
-              position: toast.POSITION.BOTTOM_CENTER,
-            }
+            "Ky numër telefoni ekziston tek një shfrytëzues tjerër! Ju lutem rishikoni numrin tuaj të telefonit"
           );
           setIsLoadingForRegister(false);
         }
       },
       (error) => {
-        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.");
         setIsLoadingForRegister(false);
       }
     );

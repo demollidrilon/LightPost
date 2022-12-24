@@ -27,6 +27,10 @@ import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const boxStyle = {
   marginTop: 6,
@@ -45,7 +49,11 @@ const AdminClientsDraws = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [equations, setEquations] = useState([]);
   const [openDetails, setOpenDetails] = useState(false);
+  const [openUsersForEquationDetails, setOpenUsersForEquationDetails] =
+    useState(false);
   const [clickedEquationOrders, setClickedEquationOrders] = useState([]);
+  const [usersForEquation, setUsersForEquation] = useState([]);
+  const [selectedUserForEquation, setSelectedUserForEquation] = useState(null);
 
   const handleClickOpenDetails = () => {
     setOpenDetails(true);
@@ -56,15 +64,45 @@ const AdminClientsDraws = () => {
     setOpenDetails(false);
   };
 
+  const handleClickOpenUsersForEquationDetails = () => {
+    setOpenUsersForEquationDetails(true);
+  };
+
+  const handleCloseUsersForEquationDetails = () => {
+    setSelectedUserForEquation(null);
+    setOpenUsersForEquationDetails(false);
+  };
+
   const getEquationOrders = async (e, equationId) => {
     e.preventDefault();
     await httpClient
       .get(`/equations/orders?equationId=${equationId}`)
       .then((res) => {
-        console.log("orders", res.data.response.data);
         setClickedEquationOrders(res.data.response.data);
-        console.log("clickedEquationOrders", clickedEquationOrders);
       });
+  };
+
+  const handleCreateEquation = async (e) => {
+    e.preventDefault();
+    await httpClient
+      .post(`/equations?clientId=${selectedUserForEquation}`)
+      .then((res) => {
+        console.log(res.data.response);
+        if (res.data.response.data == "OK") {
+          toast.success("Barazimi i krijua me sukses!");
+          getEquations();
+          handleCloseUsersForEquationDetails();
+        } else {
+          toast.error(res.data.response.data);
+          handleCloseUsersForEquationDetails();
+        }
+      });
+  };
+
+  const getUsersForEquation = async () => {
+    await httpClient.get(`/userDetails/usersForEquation`).then((res) => {
+      setUsersForEquation(res.data.response.data);
+    });
   };
 
   const exportPDF = (title, note, dataToExport) => {
@@ -118,6 +156,7 @@ const AdminClientsDraws = () => {
   };
 
   useEffect(() => {
+    getUsersForEquation();
     getEquations();
   }, []);
 
@@ -125,6 +164,102 @@ const AdminClientsDraws = () => {
     await httpClient.get(`/equations/`).then((res) => {
       setEquations(res.data.response.data);
     });
+  };
+
+  const handleClientChange = async (event) => {
+    setSelectedUserForEquation(event.target.value);
+  };
+
+  const usersForEquationDialog = () => {
+    return (
+      <>
+        <Container>
+          <Dialog
+            open={openUsersForEquationDetails}
+            onClose={handleCloseUsersForEquationDetails}
+            maxWidth="xl"
+          >
+            <AppBar
+              sx={{
+                position: "relative",
+                backgroundColor: "#101F33",
+              }}
+            >
+              <Toolbar>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleCloseUsersForEquationDetails}
+                  aria-label="close"
+                >
+                  <CloseIcon />
+                </IconButton>
+                <Typography
+                  sx={{ ml: 2, flex: 1 }}
+                  variant="h6"
+                  component="div"
+                >
+                  Zgjedh klientin dhe krijo barazim të ri
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Container
+              sx={{
+                width: 700,
+                height: 500,
+                mt: 1,
+              }}
+              style={{
+                overflow: "hidden",
+                overflowY: "scroll", // added scroll
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ textAlign: "center", color: "gray", mb: "1rem" }}
+                component="div"
+              >
+                Në këtë barazim do të përfshihen porositë që kanë statusin
+                `Dorëzuar` dhe `Refuzuar` dhë që nuk përfshihen në ndonjë
+                barazim tjetër të krijuar më parë për klientin e zgjedhur!
+              </Typography>
+              <Paper>
+                <Grid item xs={15}>
+                  <FormControl fullWidth sx={{ mt: 1 }}>
+                    <InputLabel id="demo-simple-select-label">
+                      Klientët
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={selectedUserForEquation}
+                      label="Klientët"
+                      onChange={handleClientChange}
+                    >
+                      {usersForEquation.map((client) => (
+                        <MenuItem value={client.id}>{client.username}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Button
+                  sx={{ float: "right", mt: 2 }}
+                  type="submit"
+                  variant="contained"
+                  disabled={selectedUserForEquation == null}
+                  onClick={handleCreateEquation}
+                >
+                  Krijo barazim
+                </Button>
+              </Paper>
+            </Container>
+            <Button sx={{ mt: 2 }} type="submit" onClick={handleCloseDetails}>
+              Kthehu prapa
+            </Button>
+          </Dialog>
+        </Container>
+      </>
+    );
   };
 
   const equationOrdersDialog = () => {
@@ -384,10 +519,9 @@ const AdminClientsDraws = () => {
     );
   };
 
-  const createEquation = async (event) => {};
-
   return (
     <>
+      {openUsersForEquationDetails == true && usersForEquationDialog()}
       {openDetails == true && equationOrdersDialog()}
       <Container component="main" maxWidth="xl">
         <AppBar position="static" color="transparent">
@@ -401,7 +535,7 @@ const AdminClientsDraws = () => {
           startIcon={<CurrencyExchangeIcon />}
           size="large"
           sx={buttonStyle}
-          onClick={createEquation}
+          onClick={handleClickOpenUsersForEquationDetails}
         >
           Krijo barazim të ri
         </Button>

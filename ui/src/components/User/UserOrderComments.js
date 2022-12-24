@@ -15,6 +15,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import "react-toastify/dist/ReactToastify.css";
+import * as auth from "../../utils/Auth";
 
 const boxStyle = {
   marginTop: 6,
@@ -46,7 +47,9 @@ const UserOrderComments = () => {
 
   const getComments = async () => {
     await httpClient
-      .get(`/orders/orderComments?onlyComments=${true}`)
+      .get(
+        `/orders/orderComments?onlyComments=${true}&clientId=${auth.getId()}`
+      )
       .then((res) => {
         setComments(res.data.response.data);
       });

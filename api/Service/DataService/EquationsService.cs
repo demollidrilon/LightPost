@@ -12,6 +12,17 @@ namespace Service.DataService
            : base(sqlConnection)
         { }
 
+        public string CreateEquation(int clientId)
+        {
+            string equationResponse;
+            DynamicParameters param = new DynamicParameters();
+            string procedure = "CreateEquation_sp";
+            param.Add("@ClientId", clientId);
+            equationResponse = ExecuteProcedure(procedure, param);
+
+            return equationResponse;
+        }
+
         public List<Equations> GetEquations(int? clientId)
         {
             List<Equations> equations;

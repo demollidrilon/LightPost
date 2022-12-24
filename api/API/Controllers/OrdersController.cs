@@ -189,7 +189,7 @@ namespace API.Controllers
         }
 
         [HttpGet("orderComments")]
-        public IActionResult GetOrderComments(int? code, bool? onlyComments)
+        public IActionResult GetOrderComments(int? code, bool? onlyComments, int? clientId)
         {
 
             if (!ModelState.IsValid)
@@ -197,7 +197,7 @@ namespace API.Controllers
 
             try
             {
-                var data = ordersService.GetOrderComments(code);
+                var data = ordersService.GetOrderComments(code, clientId);
                 if (onlyComments == true)
                     data = data.Where(x => x.Comment != "" && x.Comment != null).ToList();
 

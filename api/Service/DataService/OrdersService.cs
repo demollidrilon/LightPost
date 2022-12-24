@@ -84,11 +84,12 @@ namespace Service.DataService
             return order;
         }
 
-        public List<OrderComments> GetOrderComments(int? code)
+        public List<OrderComments> GetOrderComments(int? code, int? clientId)
         {
             List<OrderComments> comments;
             DynamicParameters param = new DynamicParameters();
             param.Add("@Code", code);
+            param.Add("@ClientId", clientId);
             string procedure = "OrderComments_sp";
             comments = (List<OrderComments>)GetListSp<OrderComments>(procedure, param);
 

@@ -45,52 +45,38 @@ const UserRegisterOrder = (props) => {
     event.preventDefault();
 
     if (reciever == null || reciever == "") {
-      toast.warn("Ju lutem shënoni pranuesin e porosisë!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni pranuesin e porosisë!");
       setIsLoading(false);
       return;
     }
     if (country == null || country == "") {
-      toast.warn("Ju lutem zgjedhni shtetin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem zgjedhni shtetin!");
       setIsLoading(false);
       return;
     }
     if (city == null || city == "") {
-      toast.warn("Ju lutem shënoni qytetin!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni qytetin!");
       setIsLoading(false);
       return;
     }
     if (address == null || address == "") {
-      toast.warn("Ju lutem shënoni adresën!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni adresën!");
       setIsLoading(false);
       return;
     }
     if (phoneNumber == null || phoneNumber == "") {
-      toast.warn("Ju lutem shënoni numrin e telefonit!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni numrin e telefonit!");
       setIsLoading(false);
       return;
     }
     if (price == null || price == "") {
-      toast.warn("Ju lutem shënoni çmimin për pagesë!", {
-        position: toast.POSITION.BOTTOM_CENTER,
-      });
+      toast.warn("Ju lutem shënoni çmimin për pagesë!");
       setIsLoading(false);
       return;
     }
     if (price != null || price != "") {
       if (!/^\d+\.\d+$|^\d+$/.test(price)) {
-        toast.warn("Kjo kolonë pranon vetëm numra!", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.warn("Kjo kolonë pranon vetëm numra!");
         setIsLoading(false);
         return;
       }
@@ -110,16 +96,12 @@ const UserRegisterOrder = (props) => {
 
     await httpClient.post("/orders", orderBody).then(
       (res) => {
-        toast.success("Porosia u regjistrua me sukses!", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.success("Porosia u regjistrua me sukses!");
         setIsLoading(false);
         history.push("/userHome");
       },
       (error) => {
-        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.error("Diçka shkoi gabim, ju lutem provoni përsëri.");
         setIsLoading(false);
       }
     );
